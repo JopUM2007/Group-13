@@ -8,6 +8,14 @@ import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 // Braces style modified accordingly to google style guide and comments indented at same level as the code they describe
 // changed class naming to UpperCamelCase
+
+/**
+ * {@code FileOutputStrategy} is an implementation of {@code OutputStrategy} that writes data into a file.
+ *
+ * <p>Data is formatted as: {@code patientId,timestamp,label,data}
+ *
+ */
+
 public class FileOutputStrategy implements OutputStrategy {
     // Changed variable name to lowerCamelCase
     private String baseDirectory;
@@ -17,6 +25,14 @@ public class FileOutputStrategy implements OutputStrategy {
     public FileOutputStrategy(String baseDirectory) {
         this.baseDirectory = baseDirectory;
     }
+    /**
+     * Tries to write output to a new file
+     *
+     * @param patientId the unique ID of the patient
+     * @param timestamp the time when the data was generated in milliseconds
+     * @param label the type or category of health data (e.g., "ECG", "Blood Pressure")
+     * @param data the actual health data in string format
+     */
 
     @Override
     public void output(int patientId, long timestamp, String label, String data) {

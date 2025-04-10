@@ -4,6 +4,12 @@ import java.util.Random;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+    /**
+     * {@code BloodSaturationDataGenerator} is an implementation of the {@code PatientDataGenerator} interface
+     *
+     * <p>Data is formatted as: {@code patientId,timestamp,label,data}
+     */
+
 public class BloodSaturationDataGenerator implements PatientDataGenerator {
     private static final Random random = new Random();
     private int[] lastSaturationValues;

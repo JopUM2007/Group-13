@@ -3,7 +3,11 @@ package com.cardio_generator.generators;
 import java.util.Random;
 
 import com.cardio_generator.outputs.OutputStrategy;
-// Modified inline comments which should be preceded by a space after //
+    /**
+     * {@code AlertGenerator} is an implementation of the {@code PatientDataGenerator} interface
+     *
+     * <p>Data is formatted as: {@code patientId,timestamp,label,data}
+     */
 public class AlertGenerator implements PatientDataGenerator {
 
     //Changed constant name in ALL_CAPS_WITH_UNDERSCORES

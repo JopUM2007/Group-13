@@ -6,6 +6,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executors;
 
+/**
+ * {@code TcpOutputStrategy} is an implementation of the {@code OutputStrategy} interface that sends data
+ * over a TCP connection. It starts a TCP server on a specified port and waits for a client to connect.
+ * Once a client is connected, it transmits formatted patient data to the client.
+ *
+ * <p>Data is formatted as: {@code patientId,timestamp,label,data}
+ * <p>The server accepts a single client connection in a separate thread to avoid blocking the main thread.
+ *
+ */
+
 public class TcpOutputStrategy implements OutputStrategy {
 
     private ServerSocket serverSocket;
