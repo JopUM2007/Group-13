@@ -1,6 +1,7 @@
 package com.data_management;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -60,8 +61,14 @@ public class Patient {
                     filteredRecords.add(record);
                 }
             }
-
-            return filteredRecords;
-
+        // Sort by timestamp to ensure consistent order
+        filteredRecords.sort(Comparator.comparingLong(PatientRecord::getTimestamp));
+        return filteredRecords;
     }
+
+    // Getter method
+    public int getPatientId() {
+        return patientId;
+    }
+
 }
