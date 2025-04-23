@@ -5,9 +5,10 @@ import java.util.Random;
 import com.cardio_generator.outputs.OutputStrategy;
 
     /**
-     * {@code BloodSaturationDataGenerator} is an implementation of the {@code PatientDataGenerator} interface
+     * {@code BloodSaturationDataGenerator} is an implementation of the {@code PatientDataGenerator} interface that generates a random BloodSaturation
+     * for each patient which it then generates data with.
      *
-     * <p>Data is formatted as: {@code patientId,timestamp,label,data}
+     * <p>Data is formatted as: {@code patientId},{@code current time}, {@code label}, {@code data}
      */
 
 public class BloodSaturationDataGenerator implements PatientDataGenerator {
@@ -22,7 +23,12 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
             lastSaturationValues[i] = 95 + random.nextInt(6); // Initializes with a value between 95 and 100
         }
     }
-
+        /**
+         * Prints out the data
+         *
+         * @param patientId the unique ID of the patient
+         * @param outputStrategy the set strategy to be used
+         */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {

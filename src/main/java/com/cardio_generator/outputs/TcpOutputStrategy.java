@@ -41,7 +41,14 @@ public class TcpOutputStrategy implements OutputStrategy {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Prints out all filled data
+     *
+     * @param patientId the unique ID of the patient
+     * @param timestamp the time when the data was generated in milliseconds
+     * @param label the type or category of health data (e.g., "ECG", "Blood Pressure")
+     * @param data the actual health data in string format
+     */
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
         if (out != null) {
