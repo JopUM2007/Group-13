@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FileOutputStrategy implements OutputStrategy {
     // Changed variable name to lowerCamelCase
     private String baseDirectory;
-    // Changeg name to fileMap since it's a regular field
+    // Changed name to fileMap since it's a regular field
     public final ConcurrentHashMap<String, String> fileMap = new ConcurrentHashMap<>();
 
     public FileOutputStrategy(String baseDirectory) {
