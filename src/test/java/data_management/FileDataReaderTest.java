@@ -26,7 +26,7 @@ class FileDataReaderTest {
         ));
 
         // 2. Read the file using FileDataReader
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         FileDataReader reader = new FileDataReader(tempDir.toString());
         reader.readData(storage);
 
