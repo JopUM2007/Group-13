@@ -34,12 +34,21 @@ import java.util.ArrayList;
  * the data is generated at different time intervals.
  */
 public class HealthDataSimulator {
-
-    private static int patientCount = 50; // Default number of patients
+    private static int patientCount = 50;
     private static ScheduledExecutorService scheduler;
-    private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
+    private static OutputStrategy outputStrategy = new ConsoleOutputStrategy();
     private static final Random random = new Random();
 
+    // Private constructor to prevent instantiation
+    private HealthDataSimulator() {}
+
+    private static class SingletonHelper {
+        private static final HealthDataSimulator INSTANCE = new HealthDataSimulator();
+    }
+
+    public static HealthDataSimulator getInstance() {
+        return SingletonHelper.INSTANCE;
+    }
     /**
      * Main entry point for health data simulator
      *
