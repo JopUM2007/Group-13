@@ -13,26 +13,53 @@ public class HypotensiveHypoxemiaStrategy implements AlertStrategy{
     private HypotensiveHypoxemiaFactory hhFactory = new HypotensiveHypoxemiaFactory();
 
     public void checkAlert(Patient patient, List<PatientRecord> records) {
-        double lastSystolic = Double.NaN;
-        double lastSaturation = Double.NaN;
-        long lastSystolicTime = 0, lastSaturationTime = 0;
+        long currentTime = System.currentTimeMillis();
+        long timeWindow = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+        Double recentSystolic = null;
+        Double recentSaturation = null;
+        long recentSystolicTime = 0;
+        long recentSaturationTime = 0;
+
+        // Process records in existing order to avoid sorting
         for (PatientRecord record : records) {
-            if (record.getRecordType().equals("SystolicPressure")) {
-                lastSystolic = record.getMeasurementValue();
-                lastSystolicTime = record.getTimestamp();
-            } else if (record.getRecordType().equals("Saturation")) {
-                lastSaturation = record.getMeasurementValue();
-                lastSaturationTime = record.getTimestamp();
+            // Skip older readings
+            if (currentTime - record.getTimestamp() > timeWindow) {
+                continue;
+            }
+
+            String recordType = record.getRecordType();
+            if ("SystolicPressure".equals(recordType) &&
+                (recentSystolic == null || record.getTimestamp() > recentSystolicTime)) {
+                recentSystolic = record.getMeasurementValue();
+                recentSystolicTime = record.getTimestamp();
+            } else if ("Saturation".equals(recordType) &&
+                      (recentSaturation == null || record.getTimestamp() > recentSaturationTime)) {
+                recentSaturation = record.getMeasurementValue();
+                recentSaturationTime = record.getTimestamp();
+            }
+
+            // Early termination if we found recent readings of both types
+            if (recentSystolic != null && recentSaturation != null) {
+                long timeDifference = Math.abs(recentSystolicTime - recentSaturationTime);
+                if (timeDifference <= timeWindow) {
+                    break;
+                }
             }
         }
-        if (!Double.isNaN(lastSystolic) && !Double.isNaN(lastSaturation)
-                && lastSystolic < SYSTOLIC_LOWER && lastSaturation < SATURATION_THRESHOLD) {
-            hhFactory.createAlert(
+
+        if (recentSystolic != null && recentSaturation != null) {
+            long timeDifference = Math.abs(recentSystolicTime - recentSaturationTime);
+            if (timeDifference <= timeWindow &&
+                recentSystolic < SYSTOLIC_LOWER &&
+                recentSaturation < SATURATION_THRESHOLD) {
+
+                hhFactory.createAlert(
                     String.valueOf(patient.getPatientId()),
                     "Hypotensive Hypoxemia Alert",
-                    Math.max(lastSystolicTime, lastSaturationTime)
-            );
+                    Math.max(recentSystolicTime, recentSaturationTime)
+                );
+            }
         }
-
     }
 }

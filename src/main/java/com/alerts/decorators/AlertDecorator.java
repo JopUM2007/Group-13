@@ -1,27 +1,13 @@
 package com.alerts.decorators;
 
 import com.alerts.Alert;
+import com.alerts.AlertGenerator;
 
-public class AlertDecorator extends Alert {
-    protected Alert wrappedAlert;
+public abstract class AlertDecorator {
+    private AlertGenerator alertGenerator;
 
-    public AlertDecorator(Alert alert) {
-        super(alert.getPatientId(), alert.getCondition(), alert.getTimestamp());
-        this.wrappedAlert = alert;
-    }
+    protected Alert alert;
 
-    @Override
-    public String getPatientId() {
-        return wrappedAlert.getPatientId();
-    }
-
-    @Override
-    public String getCondition() {
-        return wrappedAlert.getCondition();
-    }
-
-    @Override
-    public long getTimestamp() {
-        return wrappedAlert.getTimestamp();
+    public void triggerAlert() {
     }
 }

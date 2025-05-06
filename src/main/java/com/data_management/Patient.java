@@ -54,10 +54,8 @@ public class Patient {
      */
     public List<PatientRecord> getRecords(long startTime, long endTime) {
             List<PatientRecord> filteredRecords = new ArrayList<>();
-
             for (PatientRecord record : patientRecords) {
-                long recordTime = record.getTimestamp();
-                if (recordTime >= startTime && recordTime <= endTime) {
+                if (record.getTimestamp() >= startTime && record.getTimestamp() <= endTime) {
                     filteredRecords.add(record);
                 }
             }

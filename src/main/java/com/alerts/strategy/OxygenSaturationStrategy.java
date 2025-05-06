@@ -17,36 +17,43 @@ public class OxygenSaturationStrategy implements AlertStrategy {
 
     @Override
     public void checkAlert(Patient patient, List<PatientRecord> records) {
-        for (PatientRecord record : records) {
-            if (record.getRecordType().equals("Saturation") && record.getMeasurementValue() < SATURATION_THRESHOLD) {
-                        boFactory.createAlert(
-                        String.valueOf(patient.getPatientId()),
-                        "Low Blood Saturation Alert",
-                        record.getTimestamp()
-                );
-            }
-        }
+        boolean lowSatAlertCreated = false;
+        PatientRecord earliestLowRecord = null;
+        PatientRecord prevRecord = null;
 
-
+        // Process in a single pass, tracking both conditions
         List<PatientRecord> satRecords = records.stream()
                 .filter(r -> r.getRecordType().equals("Saturation"))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
                 .toList();
 
-        for (int i = 0; i < satRecords.size() - 1; i++) {
-            PatientRecord r1 = satRecords.get(i);
-            PatientRecord r2 = satRecords.get(i + 1);
-            if (r2.getTimestamp() - r1.getTimestamp() <= RAPID_DROP_WINDOW_MS) {
-                double drop = r1.getMeasurementValue() - r2.getMeasurementValue();
+        for (PatientRecord record : satRecords) {
+            // Check for low saturation
+            if (!lowSatAlertCreated && record.getMeasurementValue() < SATURATION_THRESHOLD) {
+                boFactory.createAlert(
+                    String.valueOf(patient.getPatientId()),
+                    "Low Blood Saturation Alert",
+                    record.getTimestamp()
+                );
+                lowSatAlertCreated = true;
+            }
+
+            // Check for rapid drop
+            if (prevRecord != null &&
+                record.getTimestamp() - prevRecord.getTimestamp() <= RAPID_DROP_WINDOW_MS) {
+
+                double drop = prevRecord.getMeasurementValue() - record.getMeasurementValue();
                 if (drop >= SATURATION_DROP) {
                     boFactory.createAlert(
-                            String.valueOf(patient.getPatientId()),
-                            "Rapid Blood Saturation Drop Alert",
-                            r2.getTimestamp()
+                        String.valueOf(patient.getPatientId()),
+                        "Rapid Blood Saturation Drop Alert",
+                        record.getTimestamp()
                     );
-                    break;
+                    break; // Stop after first rapid drop
                 }
             }
+
+            prevRecord = record;
         }
     }
 }
