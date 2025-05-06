@@ -15,8 +15,7 @@ import java.util.List;
  */
 public class AlertGenerator {
     private DataStorage dataStorage;
-
-
+    private final List<AlertStrategy> strategies;
 
     /**
      * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
@@ -28,6 +27,14 @@ public class AlertGenerator {
      */
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
+
+        this.strategies = List.of(
+                new BloodPressureStrategy(),
+                new OxygenSaturationStrategy(),
+                new HeartRateStrategy(),
+                new HypotensiveHypoxemiaStrategy(),
+                new ManualAlertStrategy()
+        ).stream().map(AlertStrategy.class::cast).toList();
     }
 
     /**
@@ -40,20 +47,20 @@ public class AlertGenerator {
      * @param patient the patient data to evaluate for alert conditions
      */
     public void evaluateData(Patient patient) {
-        // Get patient records for evaluation - using the most recent 24 hours
-        long currentTime = System.currentTimeMillis();
-        long dayAgo = currentTime -(24*60*60*1000);
-        List<PatientRecord> records = patient.getRecords(dayAgo, currentTime);
+        System.out.println("Evaluating data for patient: " + patient.getPatientId() + " ==> ");
 
-        if (records.isEmpty()) {
-            return; // No records to evaluate
+        // Get the recent records for this patient
+        List<PatientRecord> records = dataStorage.getRecords(
+                patient.getPatientId(),
+                System.currentTimeMillis() - 24*60*60*1000, // last 24 hours
+                System.currentTimeMillis()
+        );
+
+        // Apply each strategy to all patient records at once
+        for (AlertStrategy strategy : strategies) {
+            strategy.checkAlert(patient, records);
         }
 
-        // Check for different alert conditions
-        new BloodPressureStrategy().checkAlert(patient, records);
-        new OxygenSaturationStrategy().checkAlert(patient, records);
-        new HeartRateStrategy().checkAlert(patient, records);
-        new HypotensiveHypoxemiaStrategy().checkAlert(patient, records);
-        new ManualAlertStrategy().checkAlert(patient, records);
+        System.out.println(); // Add a blank line after processing
     }
 }

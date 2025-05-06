@@ -15,17 +15,27 @@ import com.alerts.AlertGenerator;
  */
 public class DataStorage {
     private Map<Integer, Patient> patientMap;
+    private static volatile DataStorage instance; // Singleton instance
 
     // Private constructor to prevent instantiation
     private DataStorage() {
         this.patientMap = new HashMap<>();
     }
-    private static class SingletonHelper {
-        private static final DataStorage INSTANCE = new DataStorage();
-    }
 
-    public static DataStorage getInstance() {
-        return SingletonHelper.INSTANCE;
+    /**
+     * Gives access to the singleton instance of DataStorage.
+     *
+     * @return the singleton instance of DataStorage
+     */
+    public static  DataStorage getInstance() {
+        if (instance == null) {
+            synchronized (DataStorage.class) {
+                if (instance == null) {
+                    instance = new DataStorage();
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -84,17 +94,16 @@ public class DataStorage {
      * The main method for the DataStorage class.
      * Initializes the system, reads data into storage, and continuously monitors
      * and evaluates patient data.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) throws IOException {
         // DataReader is not defined in this scope, should be initialized appropriately.
-        FileDataReader reader = new FileDataReader("output");
         DataStorage storage = new DataStorage();
 
         // Assuming the FileDataReader has been properly initialized and can read data into the
         // storage
-         reader.readData(storage);
+         //reader.readData(storage);
 
         // Example of using DataStorage to retrieve and print records for a patient
         List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
@@ -112,15 +121,5 @@ public class DataStorage {
         for (Patient patient : storage.getAllPatients()) {
             alertGenerator.evaluateData(patient);
         }
-    }
-
-    /**
-     * Getter method to get patientId.
-     *
-     * @param patientId the patient identification number
-     * @return the patientId
-     */
-    public Patient getPatient(int patientId) {
-        return patientMap.get(patientId);
     }
 }
