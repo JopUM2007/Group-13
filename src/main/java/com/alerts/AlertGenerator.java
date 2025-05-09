@@ -6,6 +6,7 @@ import com.data_management.Patient;
 import com.data_management.PatientRecord;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -14,7 +15,7 @@ import java.util.List;
  * it against specific health criteria.
  */
 public class AlertGenerator {
-    private DataStorage dataStorage;
+    private final DataStorage dataStorage;
     private final List<AlertStrategy> strategies;
 
     /**
@@ -28,13 +29,13 @@ public class AlertGenerator {
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
 
-        this.strategies = List.of(
+        this.strategies = Stream.of(
                 new BloodPressureStrategy(),
                 new OxygenSaturationStrategy(),
                 new HeartRateStrategy(),
                 new HypotensiveHypoxemiaStrategy(),
                 new ManualAlertStrategy()
-        ).stream().map(AlertStrategy.class::cast).toList();
+        ).toList();
     }
 
     /**
@@ -47,7 +48,7 @@ public class AlertGenerator {
      * @param patient the patient data to evaluate for alert conditions
      */
     public void evaluateData(Patient patient) {
-        System.out.println("Evaluating data for patient: " + patient.getPatientId() + " ==> ");
+      //  System.out.println("Evaluating data for patient: " + patient.getPatientId() + " ==> ");
 
         // Get the recent records for this patient
         List<PatientRecord> records = dataStorage.getRecords(
@@ -61,6 +62,5 @@ public class AlertGenerator {
             strategy.checkAlert(patient, records);
         }
 
-        System.out.println(); // Add a blank line after processing
     }
 }
