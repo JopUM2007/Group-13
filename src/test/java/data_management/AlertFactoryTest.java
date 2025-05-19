@@ -65,11 +65,11 @@ class AlertFactoryTest {
         );
 
         // Assert
-        assertNotNull(alert, "Alert shouldn't be null");
+        assertNotNull(alert, "Alert should not be null");
         assertEquals(expectedPatientId, alert.getPatientId(),
                 "Patient ID mismatch");
         assertEquals(expectedCondition, alert.getCondition(),
-                "Condition description mismatch");
+                "Condition mismatch");
         assertEquals(expectedTimestamp, alert.getTimestamp(),
                 "Timestamp mismatch");
 

@@ -59,7 +59,7 @@ class WebSocketClientTest {
 
     @Test
     void shouldHandleDataParsingErrors() {
-        String corruptMessage = "not_number,1746370219657,M,12233.789";
+        String corruptMessage = "not_number,1746370219657,M,12345.789";
         client.onMessage(corruptMessage);
         verify(mockStorage, never()).addPatientData(anyInt(), anyDouble(), anyString(), anyLong());
     }
@@ -70,7 +70,7 @@ class WebSocketClientTest {
                 .addPatientData(anyInt(), anyDouble(), anyString(), anyLong());
 
         Exception exception = assertThrows(RuntimeException.class, () ->
-                client.onMessage("20,1746370221661,EEG,-0.1071650960217215"));
+                client.onMessage("28,1746370222650,EEG,-0.18532655911156237"));
 
         assertEquals("Storage failure", exception.getMessage());
     }

@@ -39,7 +39,7 @@ public class HypotensiveHypoxemiaStrategy implements AlertStrategy{
                 recentSaturationTime = record.getTimestamp();
             }
 
-            // Early termination if we found recent readings of both types
+            // Early termination if we found recent readings for both types
             if (recentSystolic != null && recentSaturation != null) {
                 long timeDifference = Math.abs(recentSystolicTime - recentSaturationTime);
                 if (timeDifference <= timeWindow) {

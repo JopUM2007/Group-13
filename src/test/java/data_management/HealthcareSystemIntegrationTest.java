@@ -54,7 +54,6 @@ class HealthcareSystemIntegrationTest {
         webSocketClient.onOpen(mock(ServerHandshake.class));
         final long timestamp = testStartTime - 10_000;
         final int patientId = 19;
-        // Use a lower value for oxygen saturation to ensure it triggers an alert
         final String testMessage = patientId + "," + timestamp + ",Saturation,85";
 
         // Act
@@ -67,9 +66,9 @@ class HealthcareSystemIntegrationTest {
 
         List<PatientRecord> records = storage.getRecords(patientId, timestamp, timestamp);
         assertFalse(records.isEmpty(), "No records found for this patient");
-        assertEquals(1, records.size(), "Unexpected number of records");
+        assertEquals(1, records.size(), "Wrong number of records");
         assertEquals("Saturation", records.get(0).getRecordType(), "Record type mismatch");
-        assertEquals(85, records.get(0).getMeasurementValue(), 0.001, "Measurement value mismatch");
+        assertEquals(85, records.get(0).getMeasurementValue(), 0.001, "Measurement mismatch");
 
         // Reset the output stream before evaluating
         outputCapture.reset();
@@ -79,9 +78,8 @@ class HealthcareSystemIntegrationTest {
 
         String output = outputCapture.toString();
         System.setOut(originalOutput);
-        System.out.println("Actual alert output: " + output);
+        System.out.println("Alert output: " + output);
 
-        // Check for partial match if exact format is unknown
         boolean containsLowSaturationAlert = output.toLowerCase().contains("saturation") &&
                                             output.toLowerCase().contains("low");
         assertTrue(containsLowSaturationAlert, "Expected low saturation alert not triggered");

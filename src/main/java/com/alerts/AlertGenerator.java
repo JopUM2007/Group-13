@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * The {@code AlertGenerator} class is responsible for monitoring patient data
+ * The AlertGenerator class is responsible for monitoring patient data
  * and generating alerts when certain predefined conditions are met. This class
- * relies on a {@link DataStorage} instance to access patient data and evaluate
+ * relies on a  DataStorage instance to access patient data and evaluate
  * it against specific health criteria.
  */
 public class AlertGenerator {
@@ -19,12 +19,11 @@ public class AlertGenerator {
     private final List<AlertStrategy> strategies;
 
     /**
-     * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
-     * The {@code DataStorage} is used to retrieve patient data that this class
+     * Constructs an AlertGenerator with a specified  DataStorage.
+     * The DataStorage is used to retrieve patient data that this class
      * will monitor and evaluate.
      *
-     * @param dataStorage the data storage system that provides access to patient
-     *                    data
+     * @param dataStorage the data storage system that provides access to patient data.
      */
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
@@ -50,14 +49,13 @@ public class AlertGenerator {
     public void evaluateData(Patient patient) {
       //  System.out.println("Evaluating data for patient: " + patient.getPatientId() + " ==> ");
 
-        // Get the recent records for this patient
+        // Get the recent records for this patient for the last 24 hours
         List<PatientRecord> records = dataStorage.getRecords(
                 patient.getPatientId(),
-                System.currentTimeMillis() - 24*60*60*1000, // last 24 hours
+                System.currentTimeMillis() - 24*60*60*1000,
                 System.currentTimeMillis()
         );
 
-        // Apply each strategy to all patient records at once
         for (AlertStrategy strategy : strategies) {
             strategy.checkAlert(patient, records);
         }
