@@ -34,8 +34,7 @@ class AlertGeneratorTest {
         originalOut = System.out;
         System.setOut(new PrintStream(outputCapture));
 
-        // Print something to verify output capture is working
-        System.out.println("Test output capture");
+        //System.out.println("Test output capture");
 
         mockDataStorage = mock(DataStorage.class);
         alertGenerator = new AlertGenerator(mockDataStorage);
@@ -63,7 +62,7 @@ class AlertGeneratorTest {
             // Arrange
             Patient patient = createTestPatient(1);
             mockPatientRecords(Collections.singletonList(
-                    new PatientRecord(1, 200, "SystolicPressure", currentTimestamp)
+                    new PatientRecord(1, 203, "SystolicPressure", currentTimestamp)
             ));
 
             // Act
@@ -159,12 +158,16 @@ class AlertGeneratorTest {
 
         @Test
         void shouldTriggerBradycardiaAlert() {
+            // Arrange
             Patient patient = createTestPatient(1);
-            // Single reading <60 bpm
             mockPatientRecords(List.of(
                     new PatientRecord(1, 55, "ECG", currentTimestamp)
             ));
+
+            // Act
             alertGenerator.evaluateData(patient);
+
+            // Assert
             assertConsoleOutputContains("Bradycardia Alert");
         }
 
@@ -177,7 +180,7 @@ class AlertGeneratorTest {
         // Alternating intervals: 800ms and 1200ms (20% variation)
         for (int i=0; i<15; i++) {
             records.add(new PatientRecord(1, i%2==0 ? 90 : 60, "ECG", time));
-            time += (i%2 == 0) ? 800 : 1200; // Alternating short/long intervals
+            time += (i%2 == 0) ? 800 : 1200;
         }
 
         mockPatientRecords(records);

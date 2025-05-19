@@ -6,7 +6,7 @@ public class HypotensiveHypoxemiaFactory extends AlertFactory {
     /**
      * Creates an Hypotensive Hypoxemia alert with the given details.
      *
-     * @param patientId Id of the patient
+     * @param patientId ID of the patient
      * @param condition Condition that triggered the alert
      * @param timestamp Time of when the alert was triggered
      * @return new Hypotensive Hypoxemia Alert object

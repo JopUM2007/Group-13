@@ -48,7 +48,6 @@ public class BloodPressureStrategy implements AlertStrategy{
         checkTrend(patient, filteredRecords, "DiastolicPressure");
     }
 
-    // Modify checkTrend method
     private void checkTrend(Patient patient, List<PatientRecord> records, String type) {
         List<PatientRecord> bpRecords = records.stream()
                 .filter(r -> r.getRecordType().equals(type))
@@ -76,7 +75,7 @@ public class BloodPressureStrategy implements AlertStrategy{
         if (increasing) {
             bpFactory.createAlert(
                     String.valueOf(patient.getPatientId()),
-                    type.replace("Pressure","") + " Pressure Increasing", // "Systolic Pressure Increasing"
+                    type.replace("Pressure","") + " Pressure Increasing",
                     r3.getTimestamp()
             );
         }

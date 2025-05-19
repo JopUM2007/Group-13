@@ -13,10 +13,10 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
     private DataStorage dataStorage;
 
     /**
-     * Constructs a new TheWebSocketClient with the specified server URI and DataStorage.
+     * Constructs a new WebSocketClient with specific server URI and DataStorage.
      *
      * @param serverUri    the URI of the server to connect to
-     * @param dataStorage  the DataStorage instance to use for storing data
+     * @param dataStorage  the DataStorage instance to use to store the data
      */
     public WebSocketClient(URI serverUri, DataStorage dataStorage) {
         super(serverUri);
@@ -26,10 +26,10 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
     /**
      * Called when the WebSocket connection is opened.
      *
-     * @param handshakedata  the server handshake data
+     * @param handShakeData  the server handshake data
      */
     @Override
-    public void onOpen(ServerHandshake handshakedata) {
+    public void onOpen(ServerHandshake handShakeData) {
         System.out.println("Connected to server");
     }
 
@@ -51,11 +51,11 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
     /**
      * Processes a message received from the WebSocket server.
      * The message is expected to be in the format: "patientId,timestamp,label,data"
-     * where patientId is an integer, timestamp is a long, label is a string,
-     * and data is a double value.
+     * where patientId is an int, timestamp is long, label is a String,
+     * and data is a double.
      *
-     * @param message the raw message string received from the WebSocket server
-     * @throws IllegalArgumentException if the message format is invalid or cannot be parsed
+     * @param message the message string received from the WebSocket server
+     * @throws IllegalArgumentException if the message format is invalid or can't be parsed
      * @throws RuntimeException if there's an error storing the data in the data storage
      */
     private void processMessage(String message) {
@@ -70,7 +70,7 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
             double data = Double.parseDouble(parts[3].trim());
             dataStorage.addPatientData(patientId, data, label, timestamp);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid number format in message: " + message, e);
+            throw new IllegalArgumentException("Invalid format in message: " + message, e);
         }
     }
 
@@ -78,8 +78,8 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
      * Called when the WebSocket connection is closed.
      *
      * @param code     the closure code
-     * @param reason   the reason for closure
-     * @param remote   whether the closure was initiated by the remote host
+     * @param reason   the reason for closing
+     * @param remote   whether the closure was initiated by the remote host or not
      */
     @Override
     public void onClose(int code, String reason, boolean remote) {
@@ -89,7 +89,7 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
     /**
      * Called when an error occurs.
      *
-     * @param ex  the exception representing the error
+     * @param ex  the exception to the error
      */
     @Override
     public void onError(Exception ex) {
@@ -100,9 +100,9 @@ public class WebSocketClient extends org.java_websocket.client.WebSocketClient i
     /**
      * Reads data from the server and stores it in the specified DataStorage.
      *
-     * @param dataStorage  the DataStorage instance to use for storing data
+     * @param dataStorage  the instance to use for storing data
      * @param serverUri    the URI of the server to connect to
-     * @throws IOException if an I/O error occurs
+     * @throws IOException if I/O error occurs
      */
     @Override
     public void readData(DataStorage dataStorage, URI serverUri) throws IOException {

@@ -7,7 +7,7 @@ public abstract class AlertFactory {
     /**
      * Creates an alert with the given details.
      *
-     * @param patientId Id of the patient
+     * @param patientId ID of the patient
      * @param condition Condition that triggered the alert
      * @param timestamp Time of when alert was triggered
      * @return new Alert object

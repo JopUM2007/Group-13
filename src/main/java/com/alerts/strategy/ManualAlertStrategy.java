@@ -13,7 +13,7 @@ public class ManualAlertStrategy implements AlertStrategy{
 
             long currentTime = System.currentTimeMillis();
             long timeWindow = 24 * 60 * 60 * 1000; // 24 hours
-            boolean alertCreated = false; // Flag to create only one alert within time window
+            boolean alertCreated = false;
 
             for (PatientRecord record : records) {
                 if (currentTime - record.getTimestamp() <= timeWindow &&

@@ -21,7 +21,6 @@ class DataStorageIntegrationTest {
     }
 
     private void clearStorageData() {
-        // Remove all patients through existing interface
         storage.getAllPatients().forEach(patient ->
                 storage.getRecords(patient.getPatientId(), 0, Long.MAX_VALUE).clear()
         );
@@ -57,9 +56,9 @@ class DataStorageIntegrationTest {
         assertEquals(expectedPatientId, record.getPatientId(),
                 "Patient ID mismatch");
         assertEquals(expectedType, record.getRecordType(),
-                "Record type mismatch");
+                "Record mismatch");
         assertEquals(expectedValue, record.getMeasurementValue(), 0.001,
-                "Measurement value tolerance exceeded");
+                "Tolerance exceeded");
         assertEquals(expectedTimestamp, record.getTimestamp(),
                 "Timestamp mismatch");
     }

@@ -5,7 +5,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.cardio_generator.generators.AlertGenerator;
-
 import com.cardio_generator.generators.BloodPressureDataGenerator;
 import com.cardio_generator.generators.BloodSaturationDataGenerator;
 import com.cardio_generator.generators.BloodLevelsDataGenerator;
@@ -38,16 +37,17 @@ public class HealthDataSimulator {
     private static ScheduledExecutorService scheduler;
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy();
     private static final Random random = new Random();
-
-    // Private constructor to prevent instantiation
-    private HealthDataSimulator() {}
-
-    private static class SingletonHelper {
-        private static final HealthDataSimulator INSTANCE = new HealthDataSimulator();
-    }
+    private static volatile HealthDataSimulator instance;
 
     public static HealthDataSimulator getInstance() {
-        return SingletonHelper.INSTANCE;
+        if (instance == null) {
+            synchronized (HealthDataSimulator.class) {
+                if (instance == null) {
+                    instance = new HealthDataSimulator();
+                }
+            }
+        }
+        return instance;
     }
     /**
      * Main entry point for health data simulator

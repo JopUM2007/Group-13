@@ -59,7 +59,7 @@ public class Patient {
                     filteredRecords.add(record);
                 }
             }
-        // Sort by timestamp to ensure consistent order
+        // Sort by timestamp to have a consistent order
         filteredRecords.sort(Comparator.comparingLong(PatientRecord::getTimestamp));
         return filteredRecords;
     }

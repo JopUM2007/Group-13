@@ -18,10 +18,8 @@ public class OxygenSaturationStrategy implements AlertStrategy {
     @Override
     public void checkAlert(Patient patient, List<PatientRecord> records) {
         boolean lowSatAlertCreated = false;
-        PatientRecord earliestLowRecord = null;
         PatientRecord prevRecord = null;
 
-        // Process in a single pass, tracking both conditions
         List<PatientRecord> satRecords = records.stream()
                 .filter(r -> r.getRecordType().equals("Saturation"))
                 .sorted(Comparator.comparingLong(PatientRecord::getTimestamp))
@@ -49,7 +47,8 @@ public class OxygenSaturationStrategy implements AlertStrategy {
                         "Rapid Blood Saturation Drop Alert",
                         record.getTimestamp()
                     );
-                    break; // Stop after first rapid drop
+                    // Stop after first rapid drop
+                    break;
                 }
             }
 

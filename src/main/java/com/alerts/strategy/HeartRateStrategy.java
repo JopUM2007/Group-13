@@ -38,7 +38,7 @@ public class HeartRateStrategy implements AlertStrategy {
                         record.getTimestamp());
             }
         }
-        if (ecgRecords.size() >= 5) { // Minimum for rhythm analysis
+        if (ecgRecords.size() >= 5) {
             List<PatientRecord> window = ecgRecords.subList(
                     Math.max(0, ecgRecords.size()-5),
                     ecgRecords.size()
@@ -54,13 +54,13 @@ public class HeartRateStrategy implements AlertStrategy {
 
         if (ecgRecords.size() <= ECG_WINDOW) return;
 
-        // Calculate initial window sum to avoid redundant calculations
+        // Initial window sum to avoid redundant calculations
         double windowSum = 0;
         for (int j = 0; j < ECG_WINDOW; j++) {
             windowSum += ecgRecords.get(j).getMeasurementValue();
         }
 
-        // Use sliding window approach to avoid recalculating the entire sum
+        // Use sliding window to avoid recalculating the entire sum
         for (int i = ECG_WINDOW; i < ecgRecords.size(); i++) {
             double avg = windowSum / ECG_WINDOW;
             double val = ecgRecords.get(i).getMeasurementValue();
@@ -73,7 +73,6 @@ public class HeartRateStrategy implements AlertStrategy {
                 );
                 break;
             }
-            // Update window: remove oldest, add newest
             windowSum -= ecgRecords.get(i - ECG_WINDOW).getMeasurementValue();
             windowSum += val;
         }
